@@ -6,6 +6,7 @@ E2E tests automated with Cypress for practicing test automation.
 
 ## 🛠 Technologies
 
+- JavaScript
 - Cypress
 - Node.js
 - Git / GitHub
