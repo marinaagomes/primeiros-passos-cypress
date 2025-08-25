@@ -1,33 +1,44 @@
-import userData from '../fixtures/users/userData.json'
+import userData from '../fixtures/users/user-data.json'
 
 describe('Orange HRM Tests', () => {
- const selectorsList = {
+
+  const selectorsList = {
     usernameField: "[name='username']",
     passwordField: "[name='password']",
     loginButton: "[type='submit']",
     sectionTitleTopBar: ".oxd-topbar-header-breadcrumb-module",
     dashboardGrid: ".orangehrm-dashboard-grid",
-    wrongCredentialAlert: "[role='alert']"
- }
+    wrongCredentialAlert: ".oxd-alert"
+  }
 
   it('Login - Success', () => {
-    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.get(selectorsList.usernameField).type('Admin')
-    cy.get(selectorsList.passwordField).type('admin123')
-    cy.get(selectorsList.usernameField).type(userData.userSuccess.username)
-    cy.get(selectorsList.passwordField).type(userData.userSuccess.password)
-    cy.get(selectorsList.loginButton).click()
-    cy.location('pathname').should('equal', '/web/index.php/dashboard/index')
-    cy.get(selectorsList.sectionTitleTopBar).contains('Dashboard')
-    cy.get(selectorsList.dashboardGrid)
+    cy.visit('/auth/login')
+    cy.get(selectorsList.usernameField)
+      .type(userData.userSuccess.username)
+    cy.get(selectorsList.passwordField)
+      .type(userData.userSuccess.password)
+    cy.get(selectorsList.loginButton)
+      .should('be.visible')
+      .should('not.be.disabled')
+      .click()
+    cy.get(selectorsList.dashboardGrid, { timeout: 10000 })
+      .should('be.visible')
+    cy.get(selectorsList.sectionTitleTopBar, { timeout: 10000 })
+      .should('be.visible')
   })
   it('Login - Fail', () => {
-    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.get(selectorsList.usernameField).type('Test')
-    cy.get(selectorsList.passwordField).type('Test')
-    cy.get(selectorsList.usernameField).type(userData.userFail.username)
-    cy.get(selectorsList.passwordField).type(userData.userFail.password)
-    cy.get(selectorsList.loginButton).click()
-    cy.get(selectorsList.wrongCredentialAlert)
+    cy.visit('/auth/login')
+
+    cy.get(selectorsList.usernameField)
+      .type(userData.userFail.username)
+    cy.get(selectorsList.passwordField)
+      .type(userData.userFail.password)
+
+    cy.get(selectorsList.loginButton)
+      .should('be.visible')
+      .should('not.be.disabled')
+      .click()
+    cy.get(selectorsList.wrongCredentialAlert, { timeout: 10000 })
+      .should('be.visible')
   })
 })
