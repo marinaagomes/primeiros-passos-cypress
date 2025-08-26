@@ -14,6 +14,8 @@ describe('Orange HRM Tests', () => {
     lastNameField: "[name='lastName']",
     genericField: ".oxd-input--active",
     dateCloseButton: ".--close",
+    dropdownButton: ".oxd-select-text",
+    genderField: ".oxd-radio-input",
     submitButton: "[type='submit']",
   }
 
@@ -39,6 +41,12 @@ describe('Orange HRM Tests', () => {
     cy.get(selectorsList.genericField).clear().eq(6).type('DriversLicenseTest')
     cy.get(selectorsList.genericField).clear().eq(7).type('2025-03-10')
     cy.get(selectorsList.dateCloseButton).click()
+    cy.get(selectorsList.dropdownButton).eq(0).click()
+    cy.contains('.oxd-select-option', 'Brazilian').click()
+    cy.get(selectorsList.dropdownButton).eq(1).click()
+    cy.contains('.oxd-select-option', 'Married').click()
+    cy.get(selectorsList.genericField).clear().eq(9).type('1985-04-20')
+    cy.get(selectorsList.genderField).eq(1).click()
     cy.get(selectorsList.submitButton).eq(1).click()
     cy.get('body').should('contain', 'Successfully Saved')
   })
