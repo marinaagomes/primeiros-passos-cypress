@@ -1,15 +1,15 @@
 import userData from '../fixtures/users/user-data.json'
+import LoginPage from '../pages/loginPage.js'
+import DashboardPage from '../pages/dashboardPage.js'
+import MenuPage from '../pages/menuPage.js'
+
+const loginPage = new LoginPage()
+const dashboardPage = new DashboardPage()
+const menuPage = new MenuPage() 
 
 describe('Orange HRM Tests', () => {
 
   const selectorsList = {
-    usernameField: "[name='username']",
-    passwordField: "[name='password']",
-    loginButton: "[type='submit']",
-    sectionTitleTopBar: ".oxd-topbar-header-breadcrumb-module",
-    dashboardGrid: ".orangehrm-dashboard-grid",
-    wrongCredentialAlert: ".oxd-alert",
-    myInfoButton: '[href="/web/index.php/pim/viewMyDetails"]',
     firstNameField: "[name='firstName']",
     lastNameField: "[name='lastName']",
     genericField: ".oxd-input--active",
@@ -20,20 +20,13 @@ describe('Orange HRM Tests', () => {
   }
 
   it.only('User Info Update - Success', () => {
-    cy.visit('/auth/login')
-    cy.get(selectorsList.usernameField)
-      .type(userData.userSuccess.username)
-    cy.get(selectorsList.passwordField)
-      .type(userData.userSuccess.password)
-    cy.get(selectorsList.loginButton)
-      .should('be.visible')
-      .should('not.be.disabled')
-      .click()
-    cy.get(selectorsList.dashboardGrid, { timeout: 10000 })
-      .should('be.visible')
-    cy.get(selectorsList.sectionTitleTopBar, { timeout: 10000 })
-      .should('be.visible')
-    cy.get(selectorsList.myInfoButton).click()
+    loginPage.accessLoginPage()
+    loginPage.loginWithUser(userData.userSuccess.username, userData.userSuccess.password)
+
+    dashboardPage.checkDashboardPage()
+
+    menuPage.accessMyInfo()
+
     cy.get(selectorsList.firstNameField).clear().type('FirstNameTest')
     cy.get(selectorsList.lastNameField).clear().type('LastNameTest')
     cy.get(selectorsList.genericField).clear().eq(4).type('Employee')
@@ -57,7 +50,6 @@ describe('Orange HRM Tests', () => {
       .type(userData.userFail.username)
     cy.get(selectorsList.passwordField)
       .type(userData.userFail.password)
-
     cy.get(selectorsList.loginButton)
       .should('be.visible')
       .should('not.be.disabled')
